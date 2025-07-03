@@ -1,4 +1,4 @@
-const OWNER_UID = "61550558518720";
+const OWNER_UID = "100001749311229";
 let lockedGroupNames = {};
 
 module.exports.config = {
@@ -14,7 +14,7 @@ module.exports.config = {
 
 module.exports.run = async ({ api, event, args }) => {
   const { threadID, senderID } = event;
-  if (senderID !== OWNER_UID) return api.sendMessage("⛔ Sirf malik use kar sakta hai!", threadID);
+  if (senderID !== OWNER_UID) return api.sendMessage("⛔ Sirf Prince malik use kar sakta hai!", threadID);
 
   const subcmd = args[0]?.toLowerCase();
   if (!subcmd) return api.sendMessage("⚠️ Usage: lockname lock/unlock/reset <name>", threadID);
@@ -22,7 +22,7 @@ module.exports.run = async ({ api, event, args }) => {
   switch (subcmd) {
     case "lock": {
       const name = args.slice(1).join(" ");
-      if (!name) return api.sendMessage("❗ Naam bhi do!\nUsage: lockname lock Rudra Army", threadID);
+      if (!name) return api.sendMessage("❗ Naam bhi do!\nUsage: lockname lock Prince ", threadID);
       lockedGroupNames[threadID] = name;
       await api.setTitle(name, threadID);
       return api.sendMessage(`🔒 Group name lock ho gaya: ${name}`, threadID);
