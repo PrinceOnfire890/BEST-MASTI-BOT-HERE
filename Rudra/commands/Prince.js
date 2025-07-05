@@ -2,7 +2,7 @@ module.exports.config = {
   name: "tharki",
   version: "1.1",
   hasPermssion: 0,
-  credits: "rudra",
+  credits: "prince",
   description: "Non-prefix tharki replies + hacker demo + gaali + UID control",
   commandCategory: "fun",
   usages: "Auto trigger",
