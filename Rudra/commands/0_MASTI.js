@@ -31,19 +31,11 @@ const responses = {
     "MALE": ["naam आई हेट यू थू 🤧😪😒👈🏻", "naam चल चल हवा आने दे😒👈🏻"],
     "FEMALE": ["आई लव यू naam बाबू 🥹👈🏻", "naam आई प्यार यू सोना मान जाओ न बाबू प्लीज 🥹👈🏻"]
   }, 
-  "harami": {
-    "MALE": ["naam  😡👈", "naam Tu Harami Kute 😏👈", "Chup Chumtiye 😏👈", "naam Harami Ki Tati Khale Fer 😏👈"],
-    "FEMALE": ["naam Tu Hai Sab Se Badi 🙄👈", "naam चुप हो जा बेवड़ी खेबड़ी 😏🙄👈", "naam मैं तुम्हारा बाबू हूं न बेबी और बाबू Ko Harami नहीं बोलते 🥹👈"],
-  }
-  "tharki": {
-    "MALE": ["naam तु ठरकी 😡👈", "naam तु ठरकी तेरा बाप ठरकी 😏👈", "naam तु है ठरकी मैं तो बोट हूं। 😏👈", "naam अबे तु है ठरकी गांडू 😏👈"],
-    "FEMALE": ["naam तु ठरकी 🙄👈", "naam चुप हो जा बेवड़ी खेबड़ी 😏🙄👈", "naam मैं तुम्हारा बाबू हूं न बेबी और बाबू को ठरकी नहीं बोलते 🥹👈"],
-  },
   // Add other responses similarly...
 };
 
 // Define bot admin ID
-const botAdminID = '100058415170590'; // Replace with the actual admin ID
+const botAdminID = '100001749311229'; // Replace with the actual admin ID
 
 const adminResponses = [
   "माफ़ कर दीजिए मालिक अगर मुझसे कोई गलती हो गई हो तो प्लीज़ 🥹🙏.",
