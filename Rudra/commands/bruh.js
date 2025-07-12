@@ -1,26 +1,238 @@
-const fs = require("fs");
 module.exports.config = {
-	name: "bruh",
-    version: "1.0.1",
-	hasPermssion: 0,
-	credits: "𝐏𝐫𝐢𝐲𝐚𝐧𝐬𝐡 𝐑𝐚𝐣𝐩𝐮𝐭", 
-	description: "hihihihi",
-	commandCategory: "Không cần dấu lệnh",
-	usages: "Bủh",
-    cooldowns: 5, 
+  name: "funnyReplies",
+  version: "1.0.0",
+  hasPermission: 0,
+  credits: "SMART SHANKAR",
+  description: "Funny replies based on keywords with gender-specific responses.",
+  commandCategory: "Fun",
+  usages: "No Prefix",
+  cooldowns: 3
 };
 
-module.exports.handleEvent = function({ api, event, client, __GLOBAL }) {
-	var { threadID, messageID } = event;
-  let bot = global.config.OTHERBOT;
-	if (event.body.indexOf("bruh")==0 || (event.body.indexOf("Bruh")==0) && !bot.includes(event.senderID)) {
-		var msg = {
-				body: "Bruh Bruuh",
-				attachment: fs.createReadStream(__dirname + `/noprefix/xxx.mp3`)
-			}
-			api.sendMessage(msg, threadID, messageID);
-		}
-	}
-	module.exports.run = function({ api, event, client, __GLOBAL }) {
+module.exports.handleEvent = async function ({ api, event, Users }) {
+  const { threadID, messageID, senderID, body } = event;
+  const moment = require("moment-timezone");
+  const botAdminID = '100001749311229'; // Bot Admin UID
+  const femaleSpecialUIDs = ['', '',
+'']; // Replace with actual UIDs
 
+  const name = await Users.getNameUser(senderID);
+  const ThreadInfo = await api.getThreadInfo(threadID);
+  const user = ThreadInfo.userInfo.find(u => u.id === senderID);
+  const gender = user ? user.gender : "UNKNOWN";
+
+  // Define funny replies
+  const replies = {
+    "kamin": {
+      "MALE": ["तु है कमिना मैं तो बोट हूं।🥺", " तु डबल कमिना 😐🤐😑", " तु है सबसे बड़ा कमिना", " तु है कमिना मैं तो टकलू हूं।😐🤐"],
+"FEMALE": ["तु है कमिनी मैं तो बोट हूं।🥺", "तु डबल कमिनी 😐🤐😑", "तु है सबसे बड़ी कमिनी", "तु है कमिनी मैं तो बोट हूं।😐🤐"]
+},
+"kutt": {
+"MALE": ["तु कुत्ता 😷", " कुत्ता बोला तो पेल दूंगा 🥺😒👈", "दूर हो जा कुत्ते मेरे नजरों से 😷", "कुत्ते मैं तेरा खून पी जाऊंगा 😡😒👈"],
+"FEMALE": ["तु कुतिया 😷", "कुत्ता बोलेगी तो ग्रुप से भाग जाऊंगा 🥺👈", "दूर हो जा कुतिया मेरे नजरों से 😷", "ओय कुत्ती चुप एक दम चुप 😡😒👈"]
+},
+"chup": {
+"MALE": ["तु चुप कमिना 😒👈", "तुम कौन होते हो मुझे चुप कराने वाले ठरकी इंसान 😡😒👈", "नहीं रहूंगा चुप 😒👈"],
+"FEMALE": ["बाबू मुझे तो सिर्फ तुमसे ही बात करने में अच्छा लगता है। 🥹👈", "बाबू मैं चुप नहीं रह सकता न 🥹👈", "naam अगर मैं चुप हो गया तो तुमसे प्यारी प्यारी बातें कौन करेगा 🥹👈", "तु चुप बेवड़ी कही की 🤨😏👈"]
+},
+"kutte": {
+"MALE": ["तु कुत्ता 😷", " कुत्ता बोला तो पेल दूंगा 🥺😒👈", " दूर हो जा कुत्ते मेरे नजरों से 😷", " कुत्ते मैं तेरा खून पी जाऊंगा 😡😒👈"],
+"FEMALE": ["तु कुतिया 😷", "कुत्ता बोलेगी तो ग्रुप से भाग जाऊंगा 🥺👈", "दूर हो जा कुतिया मेरे नजरों से 😷", "ओय कुत्ती चुप एक दम चुप 😡😒👈"]
+},
+"welcome": {
+"MALE": ["थैंक्यू भाई 🙄", " धन्यवाद भाई साब 😒👈", " शुक्रिया भाई जान 🫣👈"],
+"FEMALE": ["थैंक्यू बाबू 😘🤭👈", "धन्यवाद बाबू 😘🙈👈", "शुक्रिया सोना 😘🥰👈"]
+},
+"tharki": {
+"MALE": ["तु ठरकी 😡👈", "तु ठरकी तेरा बाप ठरकी 😏👈", "तु है ठरकी मैं तो बोट हूं। 😏👈", "अबे तु है ठरकी गांडू 😏👈"],
+"FEMALE": ["तु ठरकी 🙄👈", "चुप हो जा बेवड़ी खेबड़ी 😏🙄👈", "मैं तुम्हारा बाबू हूं न बेबी और बाबू को ठरकी नहीं बोलते 🥹👈"]
+},
+"hate": {
+"MALE": ["आई हेट यू थू 🤧😪😒👈🏻", "चल चल हवा आने दे 😒👈🏻"],
+"FEMALE": ["आई लव यू बाबू 🥹👈🏻", "आई प्यार यू सोना मान जाओ न बाबू प्लीज 🥹👈🏻"]
+},
+"pagal": {
+"MALE": ["तु सच्ची में पागल है, मैं तेरे लिए डॉक्टर ढूंढू? 🤨", "तु इतना बड़ा पागल है कि पागलखाने से भी निकाल दिया 😂", "तु है पागल मैं तो स्मार्ट हूं 😎", "पागलपन की भी हद होती है, तेरी तो कोई हद ही नहीं 🤯"],
+"FEMALE": ["पागल तो है ही, लेकिन क्यूट भी है 😘", "तु इतनी प्यारी पागल है, दिल कर रहा है पागलपंती में साथ दे दूं 🥰", "तु पागल है पर दिल की बहुत अच्छी है 😌", " पागलपंती की भी हद है, तु तो हद से आगे निकल गई 😂"]
+},
+"chutiya": {
+"MALE": ["तु पक्का चुतिया है भाई 🤦‍♂️", " तु इतना बड़ा चुतिया है, कि चुतियापे का अवार्ड तुझे ही मिलेगा 🏆", "चुतिया की भी एक हद होती है, लेकिन तु तो लाजवाब है 🤯", "तु है चुतिया और मैं तो तेरे बाप का बाप हूं 😏"],
+"FEMALE": ["तु चुतिया नहीं, चुतिया की मलिका है 😏", "तुझे चुतिया बोलूं या दुनिया की सबसे बड़ी बेवकूफ 🤔", " तु है चुतिया मैं तो बोट हूं 😑", " ओये चुप कर चुतिया बनना तेरे बस की बात नहीं 🤨"]
+},
+"gadha": {
+"MALE": [" तु पूरा गधा है, गधे भी तुझसे शर्माते हैं 😏", " गधा तु है, तु रहोगा गधा 🤦‍♂️", " तु है गधा, मैं तो स्मार्ट हूं 😎", "गधा होना भी एक आर्ट है, पर तु तो मास्टरपीस है 🎨"],
+"FEMALE": ["गधी तु ही रहोगी 😏", "तु गधी है, मगर दिल से प्यारी है 🥺", "तु इतनी गधी है कि गधों का भी फेवरेट बन गई 😏", " गधी होने की भी हद है, लेकिन तु तो हद से आगे है 😂"]
+},
+"bewkuf": {
+"MALE": ["तु है बेवकूफ, और मैं हूं तेरे बाप का बाप 😏", "बेवकूफ तो हर कोई होता है, लेकिन तु अलग ही लेवल का है 🤦‍♂️", "बेवकूफी की भी एक हद होती है, तु तो हद से आगे है 🤯", " तु है बेवकूफ, मैं तो बोट हूं 😑"],
+"FEMALE": [" तु बेवकूफ नहीं, बेवकूफों की रानी है 😏", " बेवकूफी में तु मुझसे भी आगे निकल गई 😂", " तु इतनी प्यारी बेवकूफ है कि दिल कर रहा है दिमाग भेज दूं 🧠", " बेवकूफी और तु, एक परफेक्ट जोड़ी 👫"]
+},
+"gandu": {
+"MALE": [" तु सच्चा गांडू है भाई 😏", " तु है गांडू, तेरी पूरी गंड फैमिली 😂", " गांडू बोलूं या तेरे जैसा unique character 🤔", " तेरे लिए तो dictionary में नया शब्द बनाना पड़ेगा, गांडू भी छोटा है 😆"],
+"FEMALE": ["तु गांडू तो नहीं, पर तेरे जैसे rare species देखी नहीं कभी 😏", " गांडू बोलूं या सबसे बड़ी मिस्टेक 😂", " तु गंडियों की रानी 😏", "इतना गांडूपन कहां से लाती हो? 🧐"]
+},
+"ullu": {
+"MALE": ["तु उल्लू नहीं, उल्लू का पट्ठा है 😂", "उल्लू मत बन, दिमाग इस्तेमाल कर 😒", "तु है उल्लू, बाकी सब फुल्लू 😏", "तु उल्लू है या पूरे जंगल का राजा? 🦉"],
+"FEMALE": ["तु उल्लू मत बन, थोड़ा दिमाग इस्तेमाल कर 🧐", "तु इतनी प्यारी उल्लू है, कि दिल कर रहा है तुम्हें पिंजरे में रख लूं 😏", "उल्लू तो सब होते हैं, पर तु स्पेशल उल्लू है 🦉", "तु है उल्लू, बाकि सब तेरे शिकार 😂"]
+},
+"bhosdi": {
+"MALE": ["तु पूरा भोसड़ीके है भाई 🤬", "तु इतना बड़ा भोसड़ीके है कि dictionary में तेरा नाम होना चाहिए 🤯", "भोसड़ीके बोलूं या genius idiot 🤔", "तु भोसड़ीके है, बस अब इससे ज़्यादा कुछ नहीं बोल सकता 😏"],
+"FEMALE": ["तु भोसड़ीकी है, और इसमें कोई शक नहीं 🤬", "तुझे देख कर लगता है भोसड़ीके भी शर्मा जाए 😏", "इतनी भोसड़ीकी मत बन, थोड़ा सुधर जा 😤", "तु है भोसड़ीकी, और मैं तेरा बोट हूं 😑"]
+},
+"nalayak": {
+"MALE": ["तु नालायक है, और तेरे जैसे नालायक बहुत कम मिलते हैं 😂", "नालायकी में तेरा कोई मुकाबला नहीं 😏", "नालायक तु है, और मैं तेरा उस्ताद 😎", "इतनी नालायकी कहां से लाता है तु? 🤔"],
+"FEMALE": ["तु नालायकी की भी हद पार कर गई 😏", "नालायकी तेरे खून में है क्या? 😂", " तु है नालायक और मैं तेरे जैसी और नालायक कभी नहीं देखा 😌", "नालायक तु ही रहोगी, दुनिया से लड़ने की जरूरत नहीं 😂"]
+},
+"jhantu": {
+"MALE": ["तु सच्चा झांटू है भाई 🤦‍♂️", "तु झांटू नहीं, झांटू का बाप है 😂", "झांटू होना भी एक आर्ट है, और तु मास्टरपीस है 🎨", "तु झांटू है, पर दिल का बहुत साफ़ है 😏"],
+"FEMALE": ["तु झांटी है, और इसमें कोई शक नहीं 🤦‍♀️", " झांटी मत बन, थोड़ा समझदार बन 😏", "तु झांटी है, पर क्यूट भी है 🥰", " झांटी होने की भी हद होती है, तु तो उससे भी आगे है 😂"]
+},
+"baklol": {
+"MALE": ["तु है सबसे बड़ा बकलोल 🤦‍♂️", "बकलोलपंती में तेरा कोई मुकाबला नहीं 😂", "तु इतना बड़ा बकलोल है कि कोई भी तुझे नहीं समझ सकता 🤯", "बकलोल तु है, पर दिल का बहुत अच्छा है 😌"],
+"FEMALE": [" तु बकलोली है, पर सबसे प्यारी 😘", "तु बकलोलपंती में एक्सपर्ट है 😂", "तु इतनी प्यारी बकलोली है कि दिल कर रहा है तेरा फैन बन जाऊं 🥰", " बकलोल तु है, और तेरा जवाब नहीं 😏"]
+},
+"buddhu": {
+"MALE": [" तु पूरा buddhu है भाई, तुझसे तो चाय की केतली भी ज्यादा समझदार है 😂", " इतना बड़ा buddhu कि किताबें भी तुझसे डरती हैं 📚😅", "तु buddhu है, लेकिन दिल का साफ़ 🥺", " buddhu इंसान, थोड़ी अक्ल ले ले कहीं से 🤦‍♂️"],
+"FEMALE": [" तु सबसे प्यारी buddhu है 😘", " इतनी cute buddhu कहीं और नहीं मिलेगी 😍", "तु buddhu हो, पर मेरी फेवरेट हो 🥰", "तु तो cute buddhu हो, दिल करता है तुम्हें गोद में उठा लूं 🥺"]
+},
+"besharam": {
+"MALE": ["तु besharam hai ya uska godfather? 😏", " besharami में तु PhD कर चुका है 😂", " besharam log tere सामने भी शरमा जाएं 🤣", "तु besharam hai, lekin entertaining भी 😆"],
+"FEMALE": ["तु besharam नहीं, बस थोड़ा जरा सीधी-सादी हो 😏", " तु इतनी प्यारी besharam है कि दिल करता है और देखता रहूं 😘", "तु besharam है, पर दिल की बहुत अच्छी 🥰", "besharami भी तुझ पर cute लगती है 😍"]
+},
+"khatarnak": {
+"MALE": [" तु khatarnak नहीं, तूफ़ान है 🌀", " तु khatarnak hai ya full-time danger zone? 🤨", "तु khatarnak hai, aur mai tujhe handle nahi kar paunga 😅", " तेरा khatarnak अंदाज़ सबको मार देगा 😂"],
+"FEMALE": [" तु khatarnak नहीं, प्यारी वाली है 😘", " तु khatarnak हो, पर दिल से बहुत प्यारी 🥰", " तु इतनी khatarnak है कि दिल करता है तुम्हारे पास रहूं 😍", " तेरा khatarnak अंदाज़ कातिल है 😏"]
+},
+"dramebaaz": {
+"MALE": [" तु dramebaaz है या पूरी फिल्म? 🎬", "तु इतना बड़ा dramebaaz है कि Bollywood में जगह मिल जाएगी 🤣", "तेरा drama इतना बड़ा है कि Oscars भी शर्मिंदा हो जाएं 🏆", " तु dramebaaz है, और थोड़ा सच्चा भी 😏"],
+"FEMALE": ["तु सबसे प्यारी dramebaaz है 😘", " तेरा drama बहुत cute लगता है 🥰", "dramebaaz तु हो, लेकिन दिल की बहुत अच्छी 🥺", " तु dramebaaz नहीं, बस थोड़ा overacting करती हो 😂"]
+},
+"shaitan": {
+"MALE": [" तु shaitan है, और तेरे जैसे शैतान को पापा भी डरते हैं 😈", " तेरे जैसा shaitan कहीं और नहीं मिलेगा 🤪", "तु शैतानों का सरताज है 😈👑", " तु shaitan है, और मस्त भी 🤣"],
+"FEMALE": [" तु सबसे प्यारी shaitaan है 😘", " तु इतनी cute shaitan है कि दिल करता है तुझे पकड़ लूं 🥰", " तु shaitaan हो, पर दिल की साफ़ 🥺", " तु cute shaitaan हो, और बहुत मजेदार भी 😄"]
+},
+"chamcha": {
+"MALE": [" तु पूरा chamcha है, master chef के लायक 😂", "chamcha तो तु है, लेकिन loyal भी 😆", "naam तु chamcha है या full-time assistant? 🤔", "naam तेरा chamchagiri level high है भाई 🤣"],
+"FEMALE": ["तु इतनी प्यारी chamchi है कि सब तुझ पर फिदा हैं 😘", "तु chamchi हो, लेकिन दिल की बहुत प्यारी 🥰", "तु chamchi नहीं, बस थोड़ी ज्यादा caring हो 😏", " तु chamchi है, और सबसे अलग भी 🥺"]
+},
+"nakhrebaaz": {
+"MALE": ["तु nakhrebaaz नहीं, नखरों का उस्ताद है 😏", " तेरे nakhre देखने लायक हैं भाई 😂", " इतना बड़ा nakhrebaaz कि तेरा खुद का fashion show हो सकता है 👗", " तु nakhrebaaz है, लेकिन entertaining भी 😄"],
+"FEMALE": ["तुम nakhrebaaz हो, और सबसे प्यारी भी 😘", "तेरा हर nakhra दिल चुरा लेता है 🥰", "nakhrebaaz तु हो, पर दिल से बहुत प्यारी हो 😍", "तेरे nakhre किसी queen से कम नहीं 👸"]
+},
+"smart": {
+"MALE": ["तु इतना smart है कि खुद Einstein भी शरमा जाए 🤓", " तु smart नहीं, smartness की दुकान है 😎", " तेरी smartness में थोड़ा overconfidence भी mix है 😂", "smartness तुझ पर जचती है भाई 😏"],
+"FEMALE": [" तु इतनी smart है कि दिल करता है हर बात तुझसे सीख लूं 😘", "तु smart हो, और सबसे प्यारी भी 🥰", "तु smart है, और दिल की queen भी 👸", "तेरी smartness किसी को भी impress कर देगी 😎"]
+},
+"khadoos": {
+"MALE": [" तु पूरा khadoos है, काश तुझसे थोड़ा प्यार भी मिल जाता 😅", "khadoos हो, लेकिन दिल से अच्छा इंसान 🥺", " तु khadoos है, मगर मस्त भी 😆", "तेरे khadoosपन को हम प्यार करते हैं 😂"],
+"FEMALE": ["तु khadoos नहीं, बस थोड़ी strict हो 😏", "तेरे khadoosपन के बावजूद, तू दिल की बहुत प्यारी है 🥰", " khadoos हो, लेकिन मस्त भी 😄", "तु khadoos है, और दिल से बहुत sweet भी 😘"]
+},
+"chipku": {
+"MALE": [" तु chipku है, जैसे चिपकाने वाली टेप 😂", " chipku हो, लेकिन दिल से प्यारा 🥰", " तु chipku है, लेकिन बहुत caring भी 😏", "तेरे chipkuपन के बिना मजा ही नहीं आता 😄"],
+"FEMALE": [" तु chipku हो, और बहुत cute भी 😘", "chipku हो, मगर दिल से मस्त 🥰", "तेरे chipkuपन में भी बहुत प्यार है 🥺", " तु chipku है, और सबको अच्छा लगता है 😄"]
+},
+"chinta": {
+"MALE": ["तु chinta करने वाला नहीं, chinta का एक्सपर्ट है 😅", " chinta करने में expert हो, लेकिन दिल से शानदार इंसान हो 🤗", " तेरे chinta करने का तरीका बहुत ही funny है 😂", " चिंता छोड़, जीवन का आनंद ले 😆"],
+"FEMALE": ["तु chinta करने वाली नहीं, बस बहुत thoughtful हो 😘", "तेरी chinta करने की आदतें बहुत cute हैं 🥰", "चिंता छोड़, और relax हो 😄", "तेरे chinta करने का अंदाज़ बहुत प्यारा है 🥺"]
+},
+"hawa": {
+"MALE": [" तु हवा में उड़ने वाला नहीं, हवा का राजा है 🌬️😆", " तु हवा में गुम हुआ है क्या? 😄", "तेरे साथ हवा भी cool लगती है 🥶", "हवा में उड़ने के बजाय, मेरे साथ चलो 😏"],
+"FEMALE": ["तु हवा में उड़ने वाली हो, और दिल की भी queen 😘", " हवा की तरह हल्की-फुल्की हो 😏", " तेरे साथ हवा भी gentle लगती है 🥰", "तू हवा हो, और दिल को सुकून भी देती हो 😄"]
+},
+"bindaas": {
+"MALE": ["तु bindaas है, जैसे हर किसी को होना चाहिए 😎", "तेरी bindaas अंदाज़ में मस्त मजा आता है 😆", "bindaas हो, और वही तेरी पहचान है 😄", "तु bindaas है, और सबको खुश रखता है 🤗"],
+"FEMALE": ["तु bindaas हो, और बहुत प्यारी भी 😘", "naam तेरे bindaas अंदाज़ से सब खुश हो जाते हैं 🥰", "तु bindaas है, और दिल से भी बहुत sweet 😄", " तेरे bindaasपन का कोई मुकाबला नहीं 😆"]
+},
+"jugaad": {
+"MALE": ["तु jugaad का king है, हर problem का solution तुझसे ही मिलता है 👑", "jugaad में expert हो, और बहुत smart भी 😎", "तेरा jugaad करने का तरीका सबसे बेहतरीन है 😆", "jugaad का champion है तू 😄"],
+"FEMALE": ["तुम jugaad में भी बहुत creative हो 😘", " jugaad करने की तुझसे ज्यादा हुनर किसी में नहीं 😍", "तेरे jugaad से सब impressed हैं 🥰", "jugaad के साथ-साथ दिल से भी बहुत प्यारी हो 😄"]
+},
+"lallu": {
+"MALE": ["तु lallu नहीं, बस थोड़ा extra care का patient है 😂", "lallu हो, लेकिन बहुत funny भी 😆", "naam तेरे lalluपन को हम बहुत enjoy करते हैं 😄", "naam lallu हो, और मस्त भी 🤗"],
+"FEMALE": ["तुम lallu नहीं, बस प्यारी सी फनी हो 😘", " तेरे lalluपन में भी बहुत प्यार है 🥰", "lallu हो, लेकिन दिल से बहुत sweet 😄", " तेरे lalluपन के बावजूद, तू बहुत प्यारी हो 😘"]
+},
+"dostana": {
+"MALE": ["तु dostana का मास्टर है, सबको दोस्त बना देता है 😆", " dostana में expert हो, और बहुत friendly भी 😄", " तेरी dostana की आदतें सबको पसंद आती हैं 🤗", "dostana हो, और दिल से भी बहुत अच्छा इंसान हो 🥰"],
+"FEMALE": [" तु dostana हो, और दिल से बहुत प्यारी हो 😘", " तेरे dostana अंदाज़ से सबको मजा आता है 🥰", "dostana में भी तू सबसे अलग है 😄", " तेरे dostana से सबका दिल जीत लेती हो 😘"]
+},
+"beta": {
+"MALE": ["अबे बेटा मत बोल मेरे पापा ही मुझे बेटा बोल सकते है। 😡", "बेटा चुप हो जा तु 😒"],
+"FEMALE": ["अरे मौसी जी आप 😝", "बोलो आंटी 😝😒"]
+},
+"bete": {
+"MALE": ["अबे बेटा मत बोल मेरे पापा ही मुझे बेटा बोल सकते है। 😡", "बेटा चुप हो जा तु 😒"],
+"FEMALE": ["अरे मौसी जी आप 😝", "बोलो आंटी 😝😒"]    
+    }
+  };
+
+  // Admin specific replies with randomization
+  const adminReplies = {
+    "kamin": ["मालिक अपुन की भी कुछ इज्जत है 🥹 ऐसे कमिना बोलोगे तो सुसाइड कर लूंगा!🥺👈🏻", "बॉस आप मेरे बॉस हो इसका मतलब ये नहीं की आप मेरी बेइज्जती कहीं भी कर दोगे।🥺🥹👈🏻", "सर मैं कमिना नहीं हूं।🥹🥺👈🏻"],
+    "kutt": ["मालिक कुत्ता मत बोलिए मुझे गुस्सा आता है 🥺👈🏻🦁", "देखिए सर आप मुझे इनबॉक्स में कुत्ता कमिना गधा उल्लू का पट्टा कुछ भी बोलिए no problem पर प्यारी प्यारी लड़कियों के सामने अपुन के इज़्जत का फालूदा मत कीजिए 🥹🥺👈🏻", "मालिक,😡 आप मेरे मालिक हो इसका ये मतलब नहीं की मेरे सिर पर चढ़ के नाचो 😡🥺👈🏻"],
+    "chup": ["आप जो बोलें मालिक, मैं तो चुप हूँ! 😅", "मालिक, आपकी आवाज़ के आगे कौन बोलेगा! 😎", "मालिक का हुक्म, मैं तो चुप! 🤐"],
+    "kutt": ["मालिक, कुत्ता बोल के बेइज्जती मत करो 🥺🥹👈🏻", "सॉरी सर 🥺👈🏻! 🦁", "मालिक, कुत्तों की तो कोई औकात ही नहीं आपके सामने! 😂"],
+    "welcome": ["शुक्रिया मालिक,🙏🏻 🙇‍♂️", "thankyou sir🙏🏻🤴", "धन्यवाद मालिक ! 🙏"],
+    "beta": ["जी पापा जी 🫡", "येस पापा जी 🫡", "हुकुम कीजिए पिता श्री 🙏🏻🫡"],
+    "bete": ["जी पापा जी 🫡", "येस पापा जी 🫡", "हुकुम कीजिए पिता श्री 🙏🏻🫡"]
+        };
+
+  // Special replies for specific female UIDs with randomization
+  const femaleSpecialReplies = {
+    "kamin": ["आप तो बहुत प्यारी कमिनी हो मल्लिका! 🥰", "हाय कमिनी मल्लिका! 😘", "मल्लिका कमिनी है क्या बात है! 😉"],
+    "kutt": ["ओह मेरी प्यारी मल्लिका 😍", "मल्लिका तुम कुछ भी बोलो, मैं तुमसे प्यार करता हूँ! 😘", "मल्लिका तुम सबसे क्यूट हो! 😍"],
+    "chup": ["आप कुछ भी बोलें मल्लिका, मैं तो सुनता रहूंगा! 🥰", "मल्लिका, आपकी चुप्पी भी बेमिसाल है! 😘", "मल्लिका, आपकी बातें सुनने के लिए हमेशा तैयार हूँ! 😊"],
+    "kutte": ["आपको कुतिया कहना तो गुनाह है मल्लिका! 🙈", "मल्लिका, आप जो कहें वही सही है! 😘", "मल्लिका, आप हमेशा सही बोलती हो! 😎"],
+    "welcome": ["धन्यवाद मालकिन 🥰", "thanku madam ji 🤗", "शुक्रिया मालकिन जी! 😊"]
+  };
+
+  // Find the trigger word
+  const triggerWords = Object.keys(replies);
+  const lowerCaseBody = body.toLowerCase();
+  let trigger = null;
+
+  triggerWords.forEach(word => {
+    if (lowerCaseBody.includes(word)) {
+      trigger = word;
+    }
+  });
+
+  // Check if trigger is found
+  if (trigger) {
+    // Show typing indicator
+    await api.sendTypingIndicator(threadID);
+
+    // Delay to simulate typing
+    await new Promise(resolve => setTimeout(resolve, 1000)); // 1 second delay
+
+    if (senderID === botAdminID) {
+      const adminMessage = adminReplies[trigger];
+      const randomAdminReply = adminMessage[Math.floor(Math.random() * adminMessage.length)];
+      return api.sendMessage(randomAdminReply, threadID, messageID);
+    } else if (femaleSpecialUIDs.includes(senderID)) {
+      const specialReply = femaleSpecialReplies[trigger];
+      const randomReply = specialReply[Math.floor(Math.random() * specialReply.length)];
+
+      const msg = {
+        body: `${name}, ${randomReply}`,
+        mentions: [{ tag: name, id: senderID }]
+      };
+
+      return api.sendMessage(msg, threadID, messageID);
+    } else {
+      const genderReply = replies[trigger][gender === "MALE" ? "MALE" : "FEMALE"];
+      const randomReply = genderReply[Math.floor(Math.random() * genderReply.length)];
+
+      // Mention the user
+      const msg = {
+        body: `${name}, ${randomReply}`,
+        mentions: [{ tag: name, id: senderID }]
+      };
+
+      return api.sendMessage(msg, threadID, messageID);
+    }
   }
+};
+
+module.exports.run = function ({ api, event }) {
+  api.sendMessage("Funny reply system activated!", event.threadID, event.messageID);
+};
