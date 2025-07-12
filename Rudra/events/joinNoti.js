@@ -36,7 +36,7 @@ api.changeNickname(`« ${global.config.PREFIX} » ❲ ${(!global.config.BOTNAME)
 			}
 			memLength.sort((a, b) => a - b);
 			
-			(typeof threadData.customJoin == "undefined") ? msg = "Hello, {name}, welcome to {threadName}" : msg = threadData.customJoin;
+			(typeof threadData.customJoin == "undefined") ? msg = "𝗛𝗘𝗟𝗟𝗢 𝗗𝗘𝗔𝗥 🥰, {name}, [[ ==> ⚡ 𝗪𝗘𝗟𝗖𝗢𝗠𝗘 𝗧𝗢 ⚡ {threadName}" : msg = threadData.customJoin;
 			msg = msg
 			.replace(/\{name}/g, nameArray.join(', '))
 			.replace(/\{type}/g, (memLength.length > 1) ?  'friends' : 'you')
