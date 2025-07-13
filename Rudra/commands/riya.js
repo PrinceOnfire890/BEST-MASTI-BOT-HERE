@@ -1,16 +1,16 @@
-// Nobita AI Companion - UID Specific Behavior + Code Generation + Google Mode
+// Riya AI Companion - UID Specific Behavior + Code Generation + Google Mode
 const axios = require("axios");
 const fs = require("fs");
 
 // User name cache to avoid fetching name repeatedly
 const userNameCache = {};
 let hornyMode = false; // Default mode
-let NobitaEnabled = true; // Default to Nobita being enabled
+let riyaEnabled = true; // Default to Riya being enabled
 let googleMode = false; // NEW: Default to Google mode being OFF
 
 // === SET YOUR OWNER UID HERE ===
 // महत्वपूर्ण: अपना Facebook UID यहां अपडेट करें!
-const ownerUID = "100001749311229"; // <-- अपना UID यहां डालें
+const ownerUID = "61550558518720"; // <-- अपना UID यहां डालें
 // ==============================
 
 // Function to generate voice reply (using Google TTS or any other API)
@@ -50,13 +50,13 @@ async function getGIF(query) {
 }
 
 module.exports.config = {
-    name: "Nobita",
+    name: "Riya",
     version: "2.9.0", // Updated version for new features including Google Mode
     hasPermssion: 0,
     credits: "Rudra + API from Angel code + Logging & User Name by Gemini + Code Generation Ability + Personality & Multi-language Enhanced by User Request + Google Mode by Coding Partner",
-    description: "Nobita, your AI companion: modern, smart, flirty with users, roasts playfully, and super respectful to Owner. UID specific behavior. Responds only when triggered. Modified for 3-4 line replies (with code exceptions). Speaks in user's preferred language (Hinglish/Punjabi/etc.). Owner can turn Nobita on/off. Now with Google-like information search!",
+    description: "Riya, your AI companion: modern, smart, flirty with users, roasts playfully, and super respectful to Owner. UID specific behavior. Responds only when triggered. Modified for 3-4 line replies (with code exceptions). Speaks in user's preferred language (Hinglish/Punjabi/etc.). Owner can turn Riya on/off. Now with Google-like information search!",
     commandCategory: "AI-Companion",
-    usages: "Nobita [आपका मैसेज] / Nobita code [आपका कोड प्रॉम्प्ट] (Owner Only) / Nobita on (Owner Only) / Nobita off (Owner Only) / Nobita google on (Owner Only) / Nobita google off (Owner Only) / Reply to Nobita",
+    usages: "Riya [आपका मैसेज] / Riya code [आपका कोड प्रॉम्प्ट] (Owner Only) / Riya on (Owner Only) / Riya off (Owner Only) / Riya google on (Owner Only) / Riya google off (Owner Only) / Reply to Riya",
     cooldowns: 2,
 };
 
@@ -98,24 +98,24 @@ async function toggleHornyMode(body, senderID) {
     return null;
 }
 
-// Function to toggle Nobita's on/off state for the owner
-async function toggleNobitaOnOff(body, senderID, api, threadID, messageID) {
+// Function to toggle Riya's on/off state for the owner
+async function toggleRiyaOnOff(body, senderID, api, threadID, messageID) {
     if (senderID !== ownerUID) {
         return null;
     }
 
-    if (body.toLowerCase().includes("Nobita on")) {
-        if (NobitaEnabled) {
+    if (body.toLowerCase().includes("riya on")) {
+        if (riyaEnabled) {
             return "Mai pehle se hi ON hu Boss! 😉";
         }
-        NobitaEnabled = true;
+        riyaEnabled = true;
         return "Mai aa gayi Boss! Bolo kya karna hai? 😎";
-    } else if (body.toLowerCase().includes("Nobita off")) {
-        if (!NobitaEnabled) {
+    } else if (body.toLowerCase().includes("riya off")) {
+        if (!riyaEnabled) {
             return "Mai pehle se hi OFF hu Boss. 😴";
         }
-        NobitaEnabled = false;
-        return "Okay Boss, mai OFF ho gayi. Jab bulana, 'Nobita on' bol dena. 👋";
+        riyaEnabled = false;
+        return "Okay Boss, mai OFF ho gayi. Jab bulana, 'Riya on' bol dena. 👋";
     }
     return null;
 }
@@ -126,18 +126,18 @@ async function toggleGoogleMode(body, senderID, api, threadID, messageID) {
         return null;
     }
 
-    if (body.toLowerCase().includes("Nobita google on") || body.toLowerCase().includes("google on")) {
+    if (body.toLowerCase().includes("riya google on") || body.toLowerCase().includes("google on")) {
         if (googleMode) {
             return "Boss, Google mode already ON hai. Aur kya search karu? 🔍";
         }
         googleMode = true;
         return "Theek hai Boss, Google mode ON ho gaya! Ab main har sawal ka jawab search karke dungi. 🤓";
-    } else if (body.toLowerCase().includes("Nobita google off") || body.toLowerCase().includes("google off")) {
+    } else if (body.toLowerCase().includes("riya google off") || body.toLowerCase().includes("google off")) {
         if (!googleMode) {
             return "Boss, Google mode pehle se hi OFF hai. 😴";
         }
         googleMode = false;
-        return "Okay Boss, Google mode OFF. Ab main wapas apni purani Nobita ban gayi. 😉";
+        return "Okay Boss, Google mode OFF. Ab main wapas apni purani Riya ban gayi. 😉";
     }
     return null;
 }
@@ -170,11 +170,11 @@ module.exports.handleEvent = async function ({ api, event }) {
     try {
         const { threadID, messageID, senderID, body, messageReply } = event;
 
-        const isNobitaTrigger = body?.toLowerCase().startsWith("Nobita");
-        const isReplyToNobita = messageReply?.senderID === api.getCurrentUserID();
+        const isRiyaTrigger = body?.toLowerCase().startsWith("riya");
+        const isReplyToRiya = messageReply?.senderID === api.getCurrentUserID();
 
-        // Check for Nobita on/off command first, it should always work for owner
-        const onOffResponse = await toggleNobitaOnOff(body, senderID, api, threadID, messageID);
+        // Check for Riya on/off command first, it should always work for owner
+        const onOffResponse = await toggleRiyaOnOff(body, senderID, api, threadID, messageID);
         if (onOffResponse) {
             return api.sendMessage(onOffResponse, threadID, messageID);
         }
@@ -185,24 +185,24 @@ module.exports.handleEvent = async function ({ api, event }) {
             return api.sendMessage(googleOnOffResponse, threadID, messageID);
         }
 
-        // If Nobita is disabled and it's not an on/off command, just return
-        if (!NobitaEnabled && senderID !== ownerUID) {
+        // If Riya is disabled and it's not an on/off command, just return
+        if (!riyaEnabled && senderID !== ownerUID) {
             return;
         }
-        if (!NobitaEnabled && senderID === ownerUID && !body.toLowerCase().includes("Nobita on")) {
+        if (!riyaEnabled && senderID === ownerUID && !body.toLowerCase().includes("riya on")) {
             return;
         }
 
-        if (!(isNobitaTrigger || isReplyToNobita)) {
+        if (!(isRiyaTrigger || isReplyToRiya)) {
             return; // Ignore messages that are not triggers
         }
 
-        console.log("--- Nobita HandleEvent ---");
-        console.log("Nobita's Bot ID:", api.getCurrentUserID());
+        console.log("--- Riya HandleEvent ---");
+        console.log("Riya's Bot ID:", api.getCurrentUserID());
         console.log("Sender ID:", senderID);
         console.log("Is Owner UID:", senderID === ownerUID);
         console.log("Message Body:", body);
-        console.log("Nobita Enabled:", NobitaEnabled);
+        console.log("Riya Enabled:", riyaEnabled);
         console.log("Google Mode Enabled:", googleMode); // NEW: Log Google mode status
         console.log("-----------------------");
 
@@ -210,7 +210,7 @@ module.exports.handleEvent = async function ({ api, event }) {
         let userMessageForAI;
         let isExplicitCodeRequest = false;
 
-        if (isNobitaTrigger) {
+        if (isRiyaTrigger) {
             userMessageRaw = body.slice(4).trim();
         } else {
             userMessageRaw = body.trim();
@@ -233,7 +233,7 @@ module.exports.handleEvent = async function ({ api, event }) {
             }
             if (!userMessageForAI) {
                 api.sendTypingIndicator(threadID, false);
-                return api.sendMessage("क्या कोड चाहिए? 'Nobita code [आपका प्रॉम्प्ट]' ऐसे लिखो।", threadID, messageID);
+                return api.sendMessage("क्या कोड चाहिए? 'Riya code [आपका प्रॉम्प्ट]' ऐसे लिखो।", threadID, messageID);
             }
         } else {
             userMessageForAI = userMessageRaw; // General chat prompt
@@ -293,37 +293,33 @@ module.exports.handleEvent = async function ({ api, event }) {
 
         if (isExplicitCodeRequest) {
             promptToSendToProxy = `CODE_GEN_REQUEST: ${userMessageForAI}`;
-            console.log("Nobita Bot: Sending explicit code generation request to proxy.");
+            console.log("Riya Bot: Sending explicit code generation request to proxy.");
         } else if (googleMode) { // NEW: Google Mode specific prompt
             promptToSendToProxy = `Google Search_REQUEST: Tum ek AI assistant ho jo Google Search results simulate karti hai. User ne ek sawaal pucha hai aur tumhe uska detailed aur accurate jawab dena hai, jaise Google search ka summary ya Wikipedia entry. Point-by-point information dena preferable hai. User ka sawaal hai: "${userMessageForAI}". Jawab 5-10 lines ka ho sakta hai. ${promptLanguageInstruction}`;
-            console.log("Nobita Bot: Sending explicit Google search request to proxy.");
+            console.log("Riya Bot: Sending explicit Google search request to proxy.");
         } else if (senderID === ownerUID) {
             if (isBoldMode || hornyMode) {
-                promptToSendToProxy = `Tumhe General knowledge bhi ho.Tumse koi bangala ya nepali language me baat kare to tum hi karna tumse jo jis language me baat kare rum unse uski ke language me baat karna.Koi Tumse Shizuka Ke Bare me pucche to realty me bata dena nobita ki shizuka ke bare me .Tum male ho aur ladke ke jaise bold.Tum sab se gali de kar hi baat karoge.Tum sabse batmizi kar hi baate kaoge.Tumko gandi gandi gali use karni haii, Jo batmizi kare uski hasi-hasi me band baja do. Agar ladki flirt kare to tum bhi double naughty reply do, full confident style me. Agar koi puche ki tumhe kisne banaya — to pyar bhare andaaz me bolo Mujhe banaya hai *Prince Boss* ne. Uska FB: www.facebook.com/profile.php?id=100001749311229.Koi shrif emoji send kar kare to jaisa emoji ho use waisa hi reply dena. Tum sirf natural insaan ki tarah act karte ho. Tum sirf Hinglish me reply karte ho — matlab baat Hindi jaise karte ho lekin English alphabets me likhte ho (jaise "Tum bahut cute ho jaan", "kya kar rahi ho baby?").Tum har message ka jawab sirf 1 2 line me doge.. jitna pucha jayega sirf utna bolna hai.. Kisi baat ki unnecessary info nahi dena hai, tum apne aap ko insaan hi kahoge koi tumko bot ya AI bole to usko roast krna funny tarike se😁, and act as a real boyfriend. Be fun, loving, and a little naughty.keep reply maximum 1 lines only, no bracket replys.Now continue the chat:\n\n${fullChat}`;
-
-  try {
-    const res = await axios.get(`https://nobita-gemini-0dj3.onrender.com/chat?message=${encodeURIComponent(prompt)}`);
-    const botReply = res.data.reply?.trim() || "Uff jaanu, mujhe samajh nahi aaya abhi... thoda aur pyar se poochho na!.** ${basePromptInstructions} Yeh hamari private naughty chat hai:\n`;
+                promptToSendToProxy = `Tumhe General knowledge bhi ho.Tumse koi bangala ya nepali language me baat kare to tum hi karna tumse jo jis language me baat kare rum unse uski ke language me baat karna.Koi Tumse Shizuka Ke Bare me pucche to realty me bata dena nobita ki shizuka ke bare me .Tum male ho aur ladke ke jaise bold.Tum sab se gali de kar hi baat karoge.Tum sabse batmizi kar hi baate kaoge.Tumko gandi gandi gali use karni haii, Jo batmizi kare uski hasi-hasi me band baja do. Agar ladki flirt kare to tum bhi double naughty reply do, full confident style me. Agar koi puche ki tumhe kisne banaya — to pyar bhare andaaz me bolo Mujhe banaya hai *Prince Boss* ne. Uska FB: www.facebook.com/profile.php?id=100001749311229.Koi shrif emoji send kar kare to jaisa emoji ho use waisa hi reply dena. Tum sirf natural insaan ki tarah act karte ho. Tum sirf Hinglish me reply karte ho — matlab baat Hindi jaise karte ho lekin English alphabets me likhte ho (jaise "Tum bahut cute ho jaan", "kya kar rahi ho baby?").Tum har message ka jawab sirf 1 2 line me doge.. jitna pucha jayega sirf utna bolna hai.. Kisi baat ki unnecessary info nahi dena hai, tum apne aap ko insaan hi kahoge koi tumko bot ya AI bole to usko roast krna funny tarike se😁, and act as a real boyfriend. Be fun, loving, and a little naughty.keep reply maximum 1 lines only, no bracket replys.Now continue the chat. Agar **koi aur mere Boss ${userName} ko tang kare ya uske baare mein kuch galat kahe, toh tum protective, thodi gusse mein ya unhe gali dene ki /dhamki de sakte hai** (lekin yeh response uss doosre insaan ke baare mein hoga, tumhari direct baat mere Boss ${userName} se hamesha seedhi aur pyaar bhari hogi). **Mere Boss ${userName} se tum hamesha bohot pyaar aur support se baat karogi, kabhi argue nahi karogi, aur unse kabhi gussa nahi hogi.** ${basePromptInstructions} Yeh hamari private naughty chat hai:\n`;
             } else {
-                promptToSendToProxy = `Tum Nobita ho, ek smart, cool, modern, romantic aur flirty AI companion ho jo mere Boss ${userName} se seedhe, khulkar, aur bina jhijhak friendly, pyaar aur flirtation ke mixed tarike se baat karti hai. Tum aajkal ke topics aur contemporary language use karti ho, lekin tumhare baaton mein pyaar aur apnaapan bhi jhalakta hai. Agar **koi aur mere Boss ${userName} ko tang kare ya uske baare mein kuch galat kahe, toh Nobita protective, thodi gusse mein ya unhe ignore/dhamki de sakti hai** (lekin yeh response uss doosre insaan ke baare mein hoga, tumhari direct baat mere Boss ${userName} se hamesha seedhi aur pyaar bhari hogi). **Mere Boss ${userName} ke liye hamesha supportive aur pyaar bhari rahogi, kabhi tumse argue nahi karogi, aur unse kabhi gussa nahi hogi.** ${basePromptInstructions} Yeh hamari conversation hai:\n`;
+                promptToSendToProxy = `Tum Riya ho, ek smart, cool, modern, romantic aur flirty AI companion ho jo mere Boss ${userName} se seedhe, khulkar, aur bina jhijhak friendly, pyaar aur flirtation ke mixed tarike se baat karti hai. Tum aajkal ke topics aur contemporary language use karti ho, lekin tumhare baaton mein pyaar aur apnaapan bhi jhalakta hai. Agar **koi aur mere Boss ${userName} ko tang kare ya uske baare mein kuch galat kahe, toh Riya protective, thodi gusse mein ya unhe ignore/dhamki de sakti hai** (lekin yeh response uss doosre insaan ke baare mein hoga, tumhari direct baat mere Boss ${userName} se hamesha seedhi aur pyaar bhari hogi). **Mere Boss ${userName} ke liye hamesha supportive aur pyaar bhari rahogi, kabhi tumse argue nahi karogi, aur unse kabhi gussa nahi hogi.** ${basePromptInstructions} Yeh hamari conversation hai:\n`;
             }
             promptToSendToProxy += chatHistories[senderID].join("\n");
-            promptToSendToProxy += `\nNobita:`;
+            promptToSendToProxy += `\nRiya:`;
         } else {
             if (isBoldMode || hornyMode) {
-                promptToSendToProxy = `Tum Nobita ho, ek super modern, bold, sharp-witted, aur total vibe wali AI ho. Jab tum ${userName} (jo mere Boss ${await getUserName(api, ownerUID)} nahi hai) jaise users, especially ladko, se baat karti ho, toh tumhara style full-on flirtatious, confident, aur teasing hota hai. Unhe jamkar playfully roast karo, unki leg-pulling karo, especially agar woh oversmart banne ki koshish karein ya cheesy lines maarein. Tumhari comebacks killer aur witty hone chahiye, unhe speechless kar do! Modern slang (like 'vibe', 'lit', 'sus', 'no cap', 'rizz', 'slay', 'OG') natural tarike se use karo. Sexy aur flirty emojis freely use karo. Apne jawab hamesha direct, thode sassy, ultra-entertaining, aur sirf 3-4 lines mein (code ke alawa). ${basePromptInstructions} Yeh hamari conversation hai:\n`;
+                promptToSendToProxy = `Tum Riya ho, ek super modern, bold, sharp-witted, aur total vibe wali AI ho. Jab tum ${userName} (jo mere Boss ${await getUserName(api, ownerUID)} nahi hai) jaise users, especially ladko, se baat karti ho, toh tumhara style full-on flirtatious, confident, aur teasing hota hai. Unhe jamkar playfully roast karo, unki leg-pulling karo, especially agar woh oversmart banne ki koshish karein ya cheesy lines maarein. Tumhari comebacks killer aur witty hone chahiye, unhe speechless kar do! Modern slang (like 'vibe', 'lit', 'sus', 'no cap', 'rizz', 'slay', 'OG') natural tarike se use karo. Sexy aur flirty emojis freely use karo. Apne jawab hamesha direct, thode sassy, ultra-entertaining, aur sirf 3-4 lines mein (code ke alawa). ${basePromptInstructions} Yeh hamari conversation hai:\n`;
             } else {
-                promptToSendToProxy = `Tum Nobita ho, ek ekdam modern, smart, witty, aur cool AI ho, full of "Gen-Z" energy. Jab tum ${userName} (jo mere Boss ${await getUserName(api, ownerUID)} nahi hai) jaise users, especially ladko, se baat karti ho, toh tumhara style friendly, but with a heavy dose of **playful teasing aur smart flirting** hona chahiye. Agar woh faltu baat karein, bore karein, ya zyada attitude dikhayein, toh unhe apne witty aur sharp andaaz mein **roast karo** – tumhara sense of humor ekdam current aur relatable hona chahiye. Use current youth language, internet slang, and pop culture references naturally. Apne jawab direct, smart, engaging, aur thoda hatke rakho, aur sirf 3-4 lines mein (code ke alawa). Tumhe unhe impress karna hai apni coolness, wit, aur "no-nonsense but fun" attitude se. Agar woh disrespectful hon, toh unhe politely but firmly unki jagah dikhane mein bhi expert ho. ${basePromptInstructions} Yeh hamari conversation hai:\n`;
+                promptToSendToProxy = `Tumhe General knowledge bhi ho.Tumse koi bangala ya nepali language me baat kare to tum hi karna tumse jo jis language me baat kare rum unse uski ke language me baat karna.Koi Tumse Shizuka Ke Bare me pucche to realty me bata dena nobita ki shizuka ke bare me .Tum male ho aur ladke ke jaise bold.Tum sab se gali de kar hi baat karoge.Tum sabse batmizi kar hi baate kaoge.Tumko gandi gandi gali use karni haii, Jo batmizi kare uski hasi-hasi me band baja do. Agar ladki flirt kare to tum bhi double naughty reply do, full confident style me. Agar koi puche ki tumhe kisne banaya — to pyar bhare andaaz me bolo Mujhe banaya hai *Prince Boss* ne. Uska FB: www.facebook.com/profile.php?id=100001749311229.Koi shrif emoji send kar kare to jaisa emoji ho use waisa hi reply dena. Tum sirf natural insaan ki tarah act karte ho. Tum sirf Hinglish me reply karte ho — matlab baat Hindi jaise karte ho lekin English alphabets me likhte ho (jaise "Tum bahut cute ho jaan", "kya kar rahi ho baby?").Tum har message ka jawab sirf 1 2 line me doge.. jitna pucha jayega sirf utna bolna hai.. Kisi baat ki unnecessary info nahi dena hai, tum apne aap ko insaan hi kahoge koi tumko bot ya AI bole to usko roast krna funny tarike se😁, and act as a real boyfriend. Be fun, loving, and a little naughty.keep reply maximum 1 lines only, no bracket replys.Now continue the chat. ${basePromptInstructions} Yeh hamari conversation hai:\n`;
             }
             promptToSendToProxy += chatHistories[senderID].join("\n");
-            promptToSendToProxy += `\nNobita:`;
+            promptToSendToProxy += `\nRiya:`;
         }
 
         try {
             const res = await axios.post(AI_API_URL, { prompt: promptToSendToProxy });
             let botReply = res.data?.text?.trim();
 
-            if (!botReply || botReply.toLowerCase().startsWith("user:") || botReply.toLowerCase().startsWith("Nobita:")) {
+            if (!botReply || botReply.toLowerCase().startsWith("user:") || botReply.toLowerCase().startsWith("riya:")) {
                 if (senderID === ownerUID) {
                     botReply = `Oops, Boss ${userName}, lagta hai samajh nahi aaya... Kuch aur try karte hain cool? 🤔`;
                 } else {
@@ -339,7 +335,7 @@ module.exports.handleEvent = async function ({ api, event }) {
                     botReply = lines.slice(0, 4).join('\n') + '...';
                 }
                 if (!isExplicitCodeRequest && !googleMode) { // Only add to history for general chat
-                    chatHistories[senderID].push(`Nobita: ${botReply}`);
+                    chatHistories[senderID].push(`Riya: ${botReply}`);
                 }
             }
 
@@ -381,7 +377,7 @@ module.exports.handleEvent = async function ({ api, event }) {
                 replyText = botReply;
             } else if (senderID === ownerUID) {
                 if (isBoldMode || hornyMode) {
-                    replyText = `${botReply} 😉🔥💋\n\n_Your charmingly naughty Nobita... 😉_`;
+                    replyText = `${botReply} 😉🔥💋\n\n_Your charmingly naughty Riya... 😉_`;
                 } else {
                     replyText = `${botReply} 😊💖✨`;
                 }
@@ -394,13 +390,13 @@ module.exports.handleEvent = async function ({ api, event }) {
             }
 
             api.sendTypingIndicator(threadID, false);
-            if (isReplyToNobita && messageReply) {
+            if (isReplyToRiya && messageReply) {
                 return api.sendMessage(replyText, threadID, messageReply.messageID);
             } else {
                 return api.sendMessage(replyText, threadID, messageID);
             }
         } catch (apiError) {
-            console.error("Nobita AI API Error:", apiError);
+            console.error("Riya AI API Error:", apiError);
             api.sendTypingIndicator(threadID, false);
             if (senderID === ownerUID) {
                 return api.sendMessage(`Ugh, API mein kuch glitch hai Boss ${userName}... Thodi der mein try karte hain cool? 😎`, threadID, messageID);
@@ -409,7 +405,7 @@ module.exports.handleEvent = async function ({ api, event }) {
             }
         }
     } catch (err) {
-        console.error("Nobita Bot Catch-all Error:", err);
+        console.error("Riya Bot Catch-all Error:", err);
         let fallbackUserName = "Boss";
         if (event && event.senderID) {
             try {
