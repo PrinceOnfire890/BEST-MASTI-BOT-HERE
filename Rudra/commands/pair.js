@@ -2,8 +2,8 @@ module.exports.config = {
   name: "pair",
   version: "1.0.0",
   hasPermssion: 0,
-  credits: "Rudra X Priyansh",
-  description: "Ye jodi likhi hai bhagwan ne - Kalm tha Rudra 👑",
+  credits: "Prince",
+  description: "Ye jodi likhi hai bhagwan ne - Kalm tha Prince 👑",
   commandCategory: "love",
   cooldowns: 2,
   dependencies: {
@@ -59,7 +59,7 @@ module.exports.run = async function ({ Users, Threads, api, event }) {
   ];
   const ratings = ["💘 100%", "💫 99.9%", "🔥 98%", "❤️ 101%", "🌟 97.5%", "👑 96.69%", "🕊️ 100.0%"];
 
-  const header = "✨ Ye jodi likhi hai bhagwan ne ✨\n💢 Kalm tha... Rudra 👑";
+  const header = "✨ Ye jodi likhi hai bhagwan ne ✨\n💢 Kalm tha... Prince 👑";
   const bg = backgrounds[Math.floor(Math.random() * backgrounds.length)];
   const shayari = shayaris[Math.floor(Math.random() * shayaris.length)];
   const rating = ratings[Math.floor(Math.random() * ratings.length)];
@@ -98,7 +98,7 @@ module.exports.run = async function ({ Users, Threads, api, event }) {
 
   // 📨 Send message
   return api.sendMessage({
-    body: `${header}\n━━━━━━━━━━━━━━\n💑 ${name1} ❤️ ${name2}\n${shayari}\n❤️ Compatibility: ${rating}\n━━━━━━━━━━━━━━\n🔱 Powered by Rudra`,
+    body: `${header}\n━━━━━━━━━━━━━━\n💑 ${name1} ❤️ ${name2}\n${shayari}\n❤️ Compatibility: ${rating}\n━━━━━━━━━━━━━━\n🔱 Powered by Prince`,
     mentions: [{ tag: name2, id: id2 }],
     attachment: fs.createReadStream(pathImg)
   }, event.threadID, () => fs.unlinkSync(pathImg), event.messageID);
