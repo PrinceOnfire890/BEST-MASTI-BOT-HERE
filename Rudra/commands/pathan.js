@@ -1,11 +1,11 @@
 Module.exports.config = {
-    name: "fire2", // *** Naya naam rakha hai "fyt2" ***
+    name: "pathan", // *** Naya naam rakha hai "fyt2" ***
     version: "1.0.0",
     hasPermssion: 2, // *** Tumhare codes wala typo "hasPermssion" use kiya hai ***
     credits: "𝐏𝐫𝐢𝐲𝐚𝐧𝐬𝐡 𝐑𝐚𝐣𝐩𝐮𝐭 + Google Gemini", // Credits add/update kiye
     description: "Initiate a war and target a user by replying with their mention.", // Description update ki
     commandCategory: "wargroup", // fyt jaisi category rakhi hai
-    usages: "fire2", // Command mein mention nahi chahiye shuru mein
+    usages: "pathan", // Command mein mention nahi chahiye shuru mein
     cooldowns: 7, // fyt jitna cooldown rakha hai
     dependencies: {
         // "fs-extra": "", // Is code mein use nahi ho rahe
