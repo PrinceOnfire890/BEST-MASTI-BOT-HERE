@@ -1,13 +1,13 @@
 const axios = require("axios");
 
 module.exports.config = {
-  name: "sk",
+  name: "Nobita",
   version: "1.1.1",
   hasPermssion: 0,
   credits: "Raj",
   description: "Nobita Gemini AI chatbot - naughty romantic style",
   commandCategory: "ai",
-  usages: "[on/off/message]",
+  usages: "Nobita [आपका मैसेज] / Nobita code [आपका कोड प्रॉम्प्ट] (Owner Only) / Nobita on (Owner Only) / Nobita off (Owner Only) / Nobita google on (Owner Only) / Nobita google off (Owner Only) / Reply to Nobita",
   cooldowns: 2
 };
 
