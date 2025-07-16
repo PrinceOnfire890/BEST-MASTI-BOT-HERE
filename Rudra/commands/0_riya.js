@@ -61,7 +61,7 @@ module.exports.config = {
 };
 
 const chatHistories = {};
-const AI_API_URL = "https://rudra-here-6zh4.onrender.com"; // <-- नया Render सर्वर URL
+const AI_API_URL = "https://cyber-simsimi.onrender.com"; // <-- नया Render सर्वर URL
 
 // User name cache to avoid fetching name repeatedly
 async function getUserName(api, userID) {
