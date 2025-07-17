@@ -11,7 +11,7 @@ module.exports.config = {
   cooldowns: 2
 };
 
-const API_URL = "https://gemini-sogc.onrender/chat";
+const API_URL = "https://nobita-gemini-0dj3.onrender/chat";
 const chatHistories = {};
 let botOn = false; // ✅ Global toggle now
 
