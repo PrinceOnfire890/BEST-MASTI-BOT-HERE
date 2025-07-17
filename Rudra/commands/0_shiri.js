@@ -11,7 +11,7 @@ module.exports.config = {
   cooldowns: 2
 };
 
-const API_URL = "https://gemini2-gjmw.onrender.com/chat";
+const API_URL = "https://gemini2-y8sx.onrender.com/chat";
 const chatHistories = {};
 let botOn = false; // ✅ Global toggle now
 
@@ -49,7 +49,7 @@ module.exports.run = async function ({ api, event, args }) {
   const { threadID, messageID, senderID, messageReply, body } = event;
   let message = args.join(" ").toLowerCase();
 
-  if (message === "acho") {
+  if (message === "prince onfire") {
     botOn = true;
     return api.sendMessage("Shiri is now ON for everyone! 😳💬", threadID, messageID);
   }
@@ -90,7 +90,7 @@ module.exports.handleEvent = async function ({ api, event }) {
   const { threadID, messageID, senderID, body, messageReply } = event;
   const lowerBody = body.toLowerCase();
 
-  if (lowerBody === "acho") {
+  if (lowerBody === "prince onfire") {
     botOn = true;
     return api.sendMessage("Shiri is now ON for everyone! 🥹✨", threadID, messageID);
   }
