@@ -11,7 +11,7 @@ module.exports.config = {
   cooldowns: 2
 };
 
-const API_URL = "https://gemini2-y8sx.onrender.com/chat";
+const API_URL = "https://gemini2-gjmw.onrender.com/chat";
 const chatHistories = {};
 let botOn = false; // ✅ Global toggle now
 
